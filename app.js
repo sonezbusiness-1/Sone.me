@@ -372,6 +372,9 @@ function backToPackages() {
   }, 100);
 }
 
+// Global variables for order data
+let orderData = {};
+
 // Cart calculations with package price
 function initCartCalculations(packagePrice) {
   const domainRadios = document.querySelectorAll('input[name="domain"]');
@@ -382,6 +385,8 @@ function initCartCalculations(packagePrice) {
   let domainOriginal = 0;
   let hostingPrice = 0;
   let hostingOriginal = 0;
+  let selectedDomainText = '';
+  let selectedHostingText = '';
   
   function updateSummary() {
     // Update domain summary
@@ -390,6 +395,8 @@ function initCartCalculations(packagePrice) {
       const years = selectedDomain.value.replace('year', '');
       domainPrice = parseFloat(selectedDomain.dataset.price);
       domainOriginal = parseFloat(selectedDomain.dataset.original);
+      selectedDomainText = `${years} Year - $${domainPrice.toFixed(2)}`;
+      
       document.getElementById('summaryDomain').innerHTML = `
         <span style="text-decoration: line-through; color: #7b7b7b; font-size: 0.9rem;">$${domainOriginal.toFixed(2)}</span>
         <span style="color: #7ce9e6; font-weight: 700; font-size: 1.1rem;">$${domainPrice.toFixed(2)}</span>
@@ -399,6 +406,7 @@ function initCartCalculations(packagePrice) {
       document.getElementById('summaryDomain').textContent = 'Not selected';
       domainPrice = 0;
       domainOriginal = 0;
+      selectedDomainText = '';
     }
     
     // Update hosting summary
@@ -407,6 +415,8 @@ function initCartCalculations(packagePrice) {
       const years = selectedHosting.value.replace('year', '');
       hostingPrice = parseFloat(selectedHosting.dataset.price);
       hostingOriginal = parseFloat(selectedHosting.dataset.original);
+      selectedHostingText = `${years} Year - $${hostingPrice.toFixed(2)}`;
+      
       document.getElementById('summaryHosting').innerHTML = `
         <span style="text-decoration: line-through; color: #7b7b7b; font-size: 0.9rem;">$${hostingOriginal.toFixed(2)}</span>
         <span style="color: #7ce9e6; font-weight: 700; font-size: 1.1rem;">$${hostingPrice.toFixed(2)}</span>
@@ -416,20 +426,17 @@ function initCartCalculations(packagePrice) {
       document.getElementById('summaryHosting').textContent = 'Not selected';
       hostingPrice = 0;
       hostingOriginal = 0;
+      selectedHostingText = '';
     }
     
-    // Calculate totals INCLUDING package price
+    // Calculate totals
     const subtotal = packagePrice + domainPrice + hostingPrice;
     const originalTotal = packagePrice + domainOriginal + hostingOriginal;
     const savings = originalTotal - subtotal;
     
-    // Update subtotal display
     document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
-    
-    // Update total
     document.getElementById('summaryTotal').textContent = `$${subtotal.toFixed(2)}`;
     
-    // Show savings if any
     if (savings > 0 && (domainOriginal > 0 || hostingOriginal > 0)) {
       document.getElementById('summarySavings').style.display = 'flex';
       document.getElementById('savingsAmount').textContent = `-$${savings.toFixed(2)}`;
@@ -437,24 +444,171 @@ function initCartCalculations(packagePrice) {
       document.getElementById('summarySavings').style.display = 'none';
     }
     
-    // Enable checkout if both domain and hosting selected
     checkoutBtn.disabled = !(selectedDomain && selectedHosting);
+    
+    // Store order data
+    orderData = {
+      packageName: document.getElementById('packageBadge').textContent,
+      packagePrice: packagePrice.toFixed(2),
+      receiptPayment: document.getElementById('summaryPackageDetails').textContent.replace('Receipt Payment: ', ''),
+      domain: selectedDomainText,
+      domainPrice: domainPrice.toFixed(2),
+      hosting: selectedHostingText,
+      hostingPrice: hostingPrice.toFixed(2),
+      subtotal: subtotal.toFixed(2),
+      savings: savings > 0 ? savings.toFixed(2) : '0.00',
+      total: subtotal.toFixed(2)
+    };
   }
   
   domainRadios.forEach(radio => radio.addEventListener('change', updateSummary));
   hostingRadios.forEach(radio => radio.addEventListener('change', updateSummary));
   
-  // Initial update to show package price
   updateSummary();
   
-  // Checkout button
-  checkoutBtn.addEventListener('click', () => {
-    const packageName = document.getElementById('packageBadge').textContent;
-    const total = document.getElementById('summaryTotal').textContent;
-    const savings = document.getElementById('savingsAmount')?.textContent || '$0.00';
-    
-    alert(`🎉 Order Confirmed!\n\n${packageName}\nTotal: ${total}\nYou Saved: ${savings}\n\nProceeding to secure checkout...`);
-  });
+  // Checkout button - Open custom modal
+  checkoutBtn.addEventListener('click', openCheckoutModal);
+}
+
+// Open checkout modal
+function openCheckoutModal() {
+  const modal = document.getElementById('checkoutModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  // Populate order summary in modal
+  const summaryHtml = `
+    <div class="order-summary-item">
+      <span class="order-summary-label">Package:</span>
+      <span class="order-summary-value">${orderData.packageName}</span>
+    </div>
+    <div class="order-summary-item">
+      <span class="order-summary-label">Receipt Payment:</span>
+      <span class="order-summary-value">${orderData.receiptPayment}</span>
+    </div>
+    <div class="order-summary-item">
+      <span class="order-summary-label">Package Price:</span>
+      <span class="order-summary-value">$${orderData.packagePrice}</span>
+    </div>
+    <div class="order-summary-item">
+      <span class="order-summary-label">Domain (${orderData.domain}):</span>
+      <span class="order-summary-value">$${orderData.domainPrice}</span>
+    </div>
+    <div class="order-summary-item">
+      <span class="order-summary-label">Hosting (${orderData.hosting}):</span>
+      <span class="order-summary-value">$${orderData.hostingPrice}</span>
+    </div>
+    ${orderData.savings > 0 ? `
+    <div class="order-summary-item" style="color: #8b5cf6;">
+      <span class="order-summary-label" style="color: #8b5cf6;">You Save:</span>
+      <span class="order-summary-value" style="color: #8b5cf6;">-$${orderData.savings}</span>
+    </div>
+    ` : ''}
+    <div class="order-summary-total">
+      <span>Total:</span>
+      <span>$${orderData.total}</span>
+    </div>
+  `;
+  
+  document.getElementById('modalOrderSummary').innerHTML = summaryHtml;
+}
+
+// Close checkout modal
+function closeCheckoutModal() {
+  const modal = document.getElementById('checkoutModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// Handle checkout form submission
+document.addEventListener('DOMContentLoaded', function() {
+  const checkoutForm = document.getElementById('checkoutForm');
+  
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('orderConfirmBtn');
+      const btnText = submitBtn.querySelector('.btn-text');
+      const btnLoading = submitBtn.querySelector('.btn-loading');
+      
+      // Show loading state
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'flex';
+      submitBtn.disabled = true;
+      
+      // Get form data
+      const formData = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address1: document.getElementById('address1').value,
+        address2: document.getElementById('address2').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        country: document.getElementById('country').value,
+        postalCode: document.getElementById('postalCode').value,
+        message: document.getElementById('message').value,
+        ...orderData
+      };
+      
+      // Send email via EmailJS
+      sendOrderEmail(formData, submitBtn, btnText, btnLoading);
+    });
+  }
+});
+
+// Send order email
+function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
+  // EmailJS template parameters
+  const templateParams = {
+    to_email: 'npvsgroup@gmail.com',
+    name: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    address: `${data.address1}${data.address2 ? ', ' + data.address2 : ''}, ${data.city}, ${data.state}, ${data.country} ${data.postalCode}`,
+    package_name: data.packageName,
+    package_price: data.packagePrice,
+    receipt_payment: data.receiptPayment,
+    domain_plan: data.domain,
+    domain_price: data.domainPrice,
+    hosting_plan: data.hosting,
+    hosting_price: data.hostingPrice,
+    subtotal: data.subtotal,
+    savings: data.savings,
+    total: data.total,
+    message: data.message || 'No additional message',
+    order_date: new Date().toLocaleString()
+  };
+  
+  // Send via EmailJS
+  emailjs.send('service_najgbhk', 'template_fop2dpi', templateParams)
+    .then(function(response) {
+      console.log('✅ Email sent!', response.status);
+      
+      // Show success message
+      alert('🎉 Order confirmed successfully!\n\nWe have received your order and will contact you shortly at:\n' + data.email);
+      
+      // Close modal and reset
+      closeCheckoutModal();
+      document.getElementById('checkoutForm').reset();
+      
+      // Reset button
+      btnText.style.display = 'block';
+      btnLoading.style.display = 'none';
+      submitBtn.disabled = false;
+      
+    }, function(error) {
+      console.log('❌ Email failed:', error);
+      
+      // Show error message
+      alert('❌ Something went wrong. Please try again or contact us directly at npvsgroup@gmail.com');
+      
+      // Reset button
+      btnText.style.display = 'block';
+      btnLoading.style.display = 'none';
+      submitBtn.disabled = false;
+    });
 }
 
 
