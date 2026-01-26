@@ -43,7 +43,7 @@
         <spline-viewer data-aos="fade-zoom-in"
             data-aos-easing="ease-in-back"
             data-aos-delay="300"
-            data-aos-offset="0" data-aos-duration="3000" class="planet-3D"  url="https://prod.spline.design/o1jbUMp5IxcR2iyr/scene.splinecode">
+            data-aos-offset="0" data-aos-duration="3000" class="planet-3D"  url="htps://prod.spline.design/o1jbUMp5IxcR2iyr/scene.splinecode">
         </spline-viewer>
 
     </main>
@@ -431,6 +431,115 @@
   </div>
 </section>
 
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="checkout-modal" style="display: none;">
+  <div class="modal-overlay" onclick="closeCheckoutModal()"></div>
+  <div class="modal-container">
+    <button class="modal-close" onclick="closeCheckoutModal()">✕</button>
+    
+    <div class="modal-header">
+      <h2>Complete Your Order</h2>
+      <p>Please fill in your details to confirm your purchase</p>
+    </div>
+    
+    <form id="checkoutForm" class="checkout-form">
+      
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h3>📋 Personal Information</h3>
+        
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number *</label>
+          <input type="tel" id="phone" name="phone" required placeholder="+1 (555) 000-0000">
+        </div>
+      </div>
+      
+      <!-- Address Information -->
+      <div class="form-section">
+        <h3>📍 Address Information</h3>
+        
+        <div class="form-group">
+          <label for="address1">Address Line 1 *</label>
+          <input type="text" id="address1" name="address1" required placeholder="Street address">
+        </div>
+        
+        <div class="form-group">
+          <label for="address2">Address Line 2 (Optional)</label>
+          <input type="text" id="address2" name="address2" placeholder="Apartment, suite, unit, etc.">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City *</label>
+            <input type="text" id="city" name="city" required placeholder="City">
+          </div>
+          
+          <div class="form-group">
+            <label for="state">State/Province *</label>
+            <input type="text" id="state" name="state" required placeholder="State">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country *</label>
+            <select id="country" name="country" required>
+              <option value="">Select Country</option>
+              <option value="United States">United States</option>
+              <option value="Canada">Canada</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Australia">Australia</option>
+              <option value="Sri Lanka">Sri Lanka</option>
+              <option value="India">India</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="postalCode">Postal Code *</label>
+            <input type="text" id="postalCode" name="postalCode" required placeholder="Postal code">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Order Summary -->
+      <div class="form-section">
+        <h3>📦 Your Order</h3>
+        <div id="modalOrderSummary" class="modal-order-summary"></div>
+      </div>
+      
+      <!-- Additional Message -->
+      <div class="form-section">
+        <h3>💬 Additional Message (Optional)</h3>
+        <div class="form-group">
+          <textarea id="message" name="message" rows="4" placeholder="Any special instructions or questions..."></textarea>
+        </div>
+      </div>
+      
+      <!-- Submit Button -->
+      <button type="submit" class="order-confirm-btn" id="orderConfirmBtn">
+        <span class="btn-text">Confirm Order</span>
+        <span class="btn-loading" style="display: none;">
+          <span class="spinner"></span> Processing...
+        </span>
+      </button>
+      
+      <p class="form-notice">🔒 Your information is secure and will only be used to process your order</p>
+      
+    </form>
+  </div>
+</div>
+
     <!-- CONTACT SECTION -->
      <section class="contact-section" id="contactSection">
         <div class="section-header" data-aos="fade-down"
@@ -508,7 +617,7 @@
      </section>
 
     <footer>
-        <h3>©️2026, Made with  by Sonez</h3>
+        <h3>©️2025, Made with ❤️ by Sonez</h3>
         <div class="box-icons"> 
             <a href="https://github.com/sonezbusiness-1" target="_blank"><i class='bx bxl-github'></i></a> 
             <a href="https://linkedin.com/in/sadeepa-sithumina-amarasiriwardhana-9408b5386" target="_blank"><i class='bx bxl-linkedin-square'></i></a> 
@@ -534,6 +643,12 @@
    })();
     </script>
 
+    <script type="text/javascript">
+      emailjs.init({
+      publicKey: "pFeiVusXbRGxwsmIw"
+     });
+    </script>
+
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
     AOS.init();
@@ -542,6 +657,7 @@
     <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
