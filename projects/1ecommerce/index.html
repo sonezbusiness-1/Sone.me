@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechStore - Premium Tech Products</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">TechStore</span>
+      </div>
+      
+      <div class="navbar-menu">
+        <a href="#" class="nav-link active" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="shop">Shop</a>
+        <a href="#" class="nav-link" data-page="about">About</a>
+      </div>
+
+      <div class="navbar-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button class="cart-button" id="cartButton" aria-label="Open shopping cart">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- HOME PAGE -->
+    <section id="homePage" class="page active">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">Innovation. Performance. Elegance.</h1>
+          <p class="hero-subtitle">Discover the latest in premium technology products</p>
+          <button class="hero-cta" id="heroShopBtn">Explore Products</button>
+        </div>
+        <div class="hero-image">
+          <div class="hero-placeholder">
+            <span>✨ Latest Tech</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Products -->
+      <section class="featured-section">
+        <div class="section-header">
+          <h2>Featured Products</h2>
+          <p>Handpicked selections for you</p>
+        </div>
+        <div class="carousel-container">
+          <button class="carousel-nav prev" id="prevBtn">‹</button>
+          <div class="carousel" id="featuredCarousel">
+            <!-- Populated by JavaScript -->
+          </div>
+          <button class="carousel-nav next" id="nextBtn">›</button>
+        </div>
+      </section>
+
+      <!-- Categories Section -->
+      <section class="categories-section">
+        <div class="section-header">
+          <h2>Shop by Category</h2>
+          <p>Find what you're looking for</p>
+        </div>
+        <div class="categories-grid" id="categoriesGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+    </section>
+
+    <!-- SHOP PAGE -->
+    <section id="shopPage" class="page">
+      <div class="shop-container">
+        <!-- Sidebar Filters -->
+        <aside class="filters-sidebar">
+          <div class="filters-header">
+            <h3>Filters</h3>
+            <button class="clear-filters" id="clearFilters">Clear All</button>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="filter-group">
+            <h4>Category</h4>
+            <div class="filter-options" id="categoryFilter">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Brand Filter -->
+          <div class="filter-group">
+            <h4>Brand</h4>
+            <div class="filter-options" id="brandFilter">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Price Filter -->
+          <div class="filter-group">
+            <h4>Price Range</h4>
+            <div class="filter-options" id="priceFilter">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Shop Content -->
+        <div class="shop-content">
+          <!-- Search Bar -->
+          <div class="search-container">
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="search-input" 
+              placeholder="Search products..."
+              aria-label="Search products"
+            >
+            <span class="search-icon">🔍</span>
+          </div>
+
+          <!-- Products Grid -->
+          <div class="products-grid" id="productsGrid">
+            <!-- Populated by JavaScript -->
+          </div>
+
+          <!-- No Results Message -->
+          <div class="no-results" id="noResults" style="display: none;">
+            <p>No products found. Try adjusting your filters.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT PAGE -->
+    <section id="aboutPage" class="page">
+      <div class="about-container">
+        <h1>About TechStore</h1>
+        <p>Welcome to TechStore, your premier destination for cutting-edge technology products. We curate the finest selection of smartphones, laptops, tablets, wearables, and accessories from the world's leading brands.</p>
+        <p>Our mission is to make premium technology accessible to everyone, with competitive pricing and exceptional customer service.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Product Details Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-body">
+        <div class="modal-image">
+          <img id="modalProductImage" src="" alt="Product">
+        </div>
+        <div class="modal-details">
+          <h2 id="modalProductName"></h2>
+          <div class="modal-rating">
+            <span id="modalRating">★★★★★</span>
+            <span id="modalReviews"></span>
+          </div>
+          <div class="modal-price">
+            <span id="modalProductPrice"></span>
+          </div>
+          <div class="modal-specs" id="modalSpecs">
+            <!-- Populated by JavaScript -->
+          </div>
+          <button class="add-to-cart-btn" id="modalAddToCart">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2>Shopping Cart</h2>
+      <button class="cart-close" id="cartClose">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <!-- Populated by JavaScript -->
+    </div>
+    <div class="cart-empty" id="cartEmpty" style="display: none;">
+      <p>Your cart is empty</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cartTotal">$0.00</span>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- Checkout Page -->
+  <div class="checkout-page" id="checkoutPage">
+    <div class="checkout-container">
+      <h1>Checkout</h1>
+      <form class="checkout-form" id="checkoutForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea id="address" required></textarea>
+        </div>
+        <button type="submit" class="place-order-btn">Place Order</button>
+      </form>
+      <button class="back-to-cart" id="backToCart">Back to Cart</button>
+    </div>
+  </div>
+
+  <!-- Success Confirmation Modal -->
+  <div class="modal" id="successModal">
+    <div class="modal-content success-modal">
+      <div class="success-icon">✓</div>
+      <h2>Order Confirmed!</h2>
+      <p>Thank you for your purchase. Your order has been successfully placed.</p>
+      <button class="success-btn" id="successBtn">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- Overlay for modals -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
