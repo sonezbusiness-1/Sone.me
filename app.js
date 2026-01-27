@@ -595,10 +595,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
   const templateParams = {
     to_email: 'npvsgroup@gmail.com',
-    customer_name: data.fullName,
-    customer_email: data.email,
-    customer_phone: data.phone,
-    customer_address: `${data.address1}${data.address2 ? ', ' + data.address2 : ''}, ${data.city}, ${data.state}, ${data.country} ${data.postalCode}`,
+    name: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    address: `${data.address1}${data.address2 ? ', ' + data.address2 : ''}, ${data.city}, ${data.state}, ${data.country} ${data.postalCode}`,
     package_name: data.packageName,
     base_price: data.basePrice,
     receipt_payment: data.receiptPayment,
@@ -615,7 +615,7 @@ function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
     order_date: new Date().toLocaleString()
   };
   
-  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+  emailjs.send('service_najgbhk', 'template_fop2dpi', templateParams)
     .then(function(response) {
       console.log('✅ Email sent!', response.status);
       alert('🎉 Order confirmed successfully!\n\nWe have received your order and will contact you shortly at:\n' + data.email);
@@ -751,4 +751,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-
