@@ -396,17 +396,40 @@ let orderData = {};
 function initCartCalculations(packagePrice, packageName, receiptType, basePrice, receiptCharge) {
   const domainRadios = document.querySelectorAll('input[name="domain"]');
   const hostingRadios = document.querySelectorAll('input[name="hosting"]');
+  const printerSelect = document.getElementById('printerSelect');
+  const gatewayRadios = document.querySelectorAll('input[name="gateway"]');
   const checkoutBtn = document.getElementById('checkoutBtn');
+  const gatewaySection = document.getElementById('paymentGatewaySection');
+  const printerSection = document.getElementById('posPrinterSection');
+  
+  // Show POS printer section only for Pro package
+  if (packageName === 'Pro') {
+    printerSection.style.display = 'block';
+  } else {
+    printerSection.style.display = 'none';
+  }
+  
+  // Show/hide payment gateway section
+  if (receiptType === 'Pay Now' || receiptType === 'Both') {
+    if (packageName === 'Premium' || packageName === 'Pro') {
+      gatewaySection.style.display = 'block';
+    }
+  } else {
+    gatewaySection.style.display = 'none';
+  }
   
   let domainPrice = 0;
   let domainOriginal = 0;
   let hostingPrice = 0;
   let hostingOriginal = 0;
+  let gatewayPrice = 0;
   let selectedDomainText = '';
   let selectedHostingText = '';
+  let selectedGatewayText = '';
+  let selectedPrinter = '';
   
   function updateSummary() {
-    // Update domain summary
+    // Domain
     const selectedDomain = document.querySelector('input[name="domain"]:checked');
     if (selectedDomain) {
       const years = selectedDomain.value.replace('year', '');
@@ -426,7 +449,7 @@ function initCartCalculations(packagePrice, packageName, receiptType, basePrice,
       selectedDomainText = '';
     }
     
-    // Update hosting summary
+    // Hosting
     const selectedHosting = document.querySelector('input[name="hosting"]:checked');
     if (selectedHosting) {
       const years = selectedHosting.value.replace('year', '');
@@ -446,10 +469,117 @@ function initCartCalculations(packagePrice, packageName, receiptType, basePrice,
       selectedHostingText = '';
     }
     
-    // Calculate totals
-    const subtotal = packagePrice + domainPrice + hostingPrice;
+    // POS Printer (Pro package only)
+    let printerDisplay = document.getElementById('summaryPrinter');
+    
+    if (!printerDisplay && printerSection.style.display === 'block') {
+      const hostingRow = Array.from(document.querySelectorAll('.summary-item')).find(row => 
+        row.textContent.includes('Hosting')
+      );
+      
+      if (hostingRow) {
+        const printerRow = document.createElement('div');
+        printerRow.className = 'summary-item';
+        printerRow.id = 'printerRow';
+        printerRow.innerHTML = `
+          <span>POS Printer:</span>
+          <span id="summaryPrinter" class="summary-value">Not selected</span>
+        `;
+        hostingRow.after(printerRow);
+        printerDisplay = document.getElementById('summaryPrinter');
+      }
+    }
+    
+    if (printerSection.style.display === 'block') {
+      const printerRow = document.getElementById('printerRow');
+      if (printerRow) {
+        printerRow.style.display = 'flex';
+      }
+      
+      if (printerSelect && printerSelect.value) {
+        selectedPrinter = printerSelect.value;
+        printerDisplay.innerHTML = `
+          <span style="color: #2ed573; font-weight: 600;">${selectedPrinter}</span>
+          <span style="color: #7b7b7b; font-size: 0.85rem;">(Included)</span>
+        `;
+      } else {
+        if (printerDisplay) {
+          printerDisplay.textContent = 'Not selected';
+        }
+        selectedPrinter = '';
+      }
+    } else {
+      const printerRow = document.getElementById('printerRow');
+      if (printerRow) {
+        printerRow.style.display = 'none';
+      }
+      selectedPrinter = '';
+    }
+    
+    // Payment Gateway
+    const selectedGateway = document.querySelector('input[name="gateway"]:checked');
+    let gatewayDisplay = document.getElementById('summaryGateway');
+    
+    if (!gatewayDisplay && gatewaySection.style.display === 'block') {
+      const printerRow = document.getElementById('printerRow');
+      const lastRow = printerRow || Array.from(document.querySelectorAll('.summary-item')).find(row => 
+        row.textContent.includes('Hosting')
+      );
+      
+      if (lastRow) {
+        const gatewayRow = document.createElement('div');
+        gatewayRow.className = 'summary-item';
+        gatewayRow.id = 'gatewayRow';
+        gatewayRow.innerHTML = `
+          <span>Payment Gateway:</span>
+          <span id="summaryGateway" class="summary-value">Not selected</span>
+        `;
+        lastRow.after(gatewayRow);
+        gatewayDisplay = document.getElementById('summaryGateway');
+      }
+    }
+    
+    if (gatewaySection.style.display === 'block') {
+      const gatewayRow = document.getElementById('gatewayRow');
+      if (gatewayRow) {
+        gatewayRow.style.display = 'flex';
+      }
+      
+      if (selectedGateway) {
+        gatewayPrice = parseFloat(selectedGateway.dataset.price);
+        const planName = selectedGateway.value.charAt(0).toUpperCase() + selectedGateway.value.slice(1);
+        selectedGatewayText = `${planName} Plan`;
+        
+        if (gatewayPrice === 0) {
+          gatewayDisplay.innerHTML = `
+            <span style="color: #2ed573; font-weight: 700; font-size: 1.1rem;">Free</span>
+          `;
+        } else {
+          gatewayDisplay.innerHTML = `
+            <span style="color: #7ce9e6; font-weight: 700; font-size: 1.1rem;">$${gatewayPrice.toFixed(2)}</span>
+            <span style="color: #7b7b7b; font-size: 0.85rem;">/month</span>
+          `;
+        }
+      } else {
+        if (gatewayDisplay) {
+          gatewayDisplay.textContent = 'Not selected';
+        }
+        gatewayPrice = 0;
+        selectedGatewayText = '';
+      }
+    } else {
+      const gatewayRow = document.getElementById('gatewayRow');
+      if (gatewayRow) {
+        gatewayRow.style.display = 'none';
+      }
+      gatewayPrice = 0;
+      selectedGatewayText = '';
+    }
+    
+    // Calculate totals (printer is included, doesn't add to price)
+    const subtotal = packagePrice + domainPrice + hostingPrice + gatewayPrice;
     const originalTotal = packagePrice + domainOriginal + hostingOriginal;
-    const savings = originalTotal - subtotal;
+    const savings = originalTotal - (packagePrice + domainPrice + hostingPrice);
     
     document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('summaryTotal').textContent = `$${subtotal.toFixed(2)}`;
@@ -461,9 +591,18 @@ function initCartCalculations(packagePrice, packageName, receiptType, basePrice,
       document.getElementById('summarySavings').style.display = 'none';
     }
     
-    checkoutBtn.disabled = !(selectedDomain && selectedHosting);
+    // Enable checkout
+    const printerRequired = printerSection.style.display === 'block';
+    const gatewayRequired = gatewaySection.style.display === 'block';
     
-    // Store order data for modal
+    checkoutBtn.disabled = !(
+      selectedDomain && 
+      selectedHosting && 
+      (!printerRequired || (printerSelect && printerSelect.value)) &&
+      (!gatewayRequired || selectedGateway)
+    );
+    
+    // Store order data
     orderData = {
       packageName: packageName,
       packagePrice: packagePrice.toFixed(2),
@@ -474,6 +613,9 @@ function initCartCalculations(packagePrice, packageName, receiptType, basePrice,
       domainPrice: domainPrice.toFixed(2),
       hosting: selectedHostingText,
       hostingPrice: hostingPrice.toFixed(2),
+      printer: selectedPrinter || 'N/A',
+      gateway: selectedGatewayText || 'N/A',
+      gatewayPrice: gatewayPrice > 0 ? gatewayPrice.toFixed(2) : (selectedGatewayText ? '0.00' : 'N/A'),
       subtotal: subtotal.toFixed(2),
       savings: savings > 0 ? savings.toFixed(2) : '0.00',
       total: subtotal.toFixed(2)
@@ -482,6 +624,10 @@ function initCartCalculations(packagePrice, packageName, receiptType, basePrice,
   
   domainRadios.forEach(radio => radio.addEventListener('change', updateSummary));
   hostingRadios.forEach(radio => radio.addEventListener('change', updateSummary));
+  if (printerSelect) {
+    printerSelect.addEventListener('change', updateSummary);
+  }
+  gatewayRadios.forEach(radio => radio.addEventListener('change', updateSummary));
   
   updateSummary();
   
@@ -534,6 +680,26 @@ function openCheckoutModal() {
       <span>${orderData.hosting}</span>
       <span></span>
     </div>
+    ${orderData.gateway && orderData.gatewayPrice !== 'N/A' ? `
+    <div class="order-summary-item">
+      <span class="order-summary-label">Payment Gateway:</span>
+      <span class="order-summary-value">${orderData.gatewayPrice === '0.00' ? 'Free' : '$' + orderData.gatewayPrice}</span>
+    </div>
+    <div class="order-summary-item" style="font-size: 0.85rem; padding-left: 15px; color: #a0a0a0;">
+      <span>${orderData.gateway}</span>
+      <span></span>
+    </div>
+    ` : ''}
+    ${orderData.printer && orderData.printer !== 'N/A' ? `
+    <div class="order-summary-item">
+      <span class="order-summary-label">POS Printer:</span>
+      <span class="order-summary-value" style="color: #2ed573;">${orderData.printer}</span>
+    </div>
+    <div class="order-summary-item" style="font-size: 0.85rem; padding-left: 15px; color: #a0a0a0;">
+      <span>Included & Programmed</span>
+      <span></span>
+    </div>
+    ` : ''}
     ${orderData.savings > 0 ? `
     <div class="order-summary-item" style="background: rgba(139, 92, 246, 0.1); padding: 10px; border-radius: 8px; margin: 10px 0;">
       <span class="order-summary-label" style="color: #8b5cf6; font-weight: 600;">You Save:</span>
@@ -545,7 +711,7 @@ function openCheckoutModal() {
       <span>$${orderData.total}</span>
     </div>
   `;
-  
+
   document.getElementById('modalOrderSummary').innerHTML = summaryHtml;
 }
 
@@ -608,6 +774,9 @@ function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
     domain_price: data.domainPrice,
     hosting_plan: data.hosting,
     hosting_price: data.hostingPrice,
+    printer: data.printer,
+    gateway: data.gateway,
+    gateway_price: data.gatewayPrice,
     subtotal: data.subtotal,
     savings: data.savings,
     total: data.total,
