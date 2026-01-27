@@ -207,11 +207,18 @@ document.addEventListener('DOMContentLoaded', function() {
     ]
   };
   
-  // Package prices
+  // Package prices (ALREADY INCLUDE receipt charges)
   const packagePrices = {
-    Basic: 326.05,
-    Premium: 586.89,
-    Pro: 1304.19
+    Basic: 326.05,      // Includes Pay After $50
+    Premium: 586.89,    // Can be Pay After $50 or Pay Now $250
+    Pro: 1304.19        // Can be Pay After $50 or Pay Now $250
+  };
+  
+  // Receipt charge breakdown (for display only)
+  const receiptCharges = {
+    'Pay After': 50,
+    'Pay Now': 250,
+    'Both': 250
   };
   
   if (document.readyState === 'loading') {
@@ -297,18 +304,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function showCart(packageName, receiptType) {
       console.log('🛒 Opening cart...');
       
-      // Step 1: Scroll to top
+      // Scroll to top
       window.scrollTo({ 
         top: 0, 
         behavior: 'smooth' 
       });
       
-      // Step 2: After reaching top, switch content
+      // After reaching top, switch content
       setTimeout(() => {
         packagesSection.style.display = 'none';
         cartSection.style.display = 'block';
         
-        // Step 3: Scroll to cart section
+        // Scroll to cart section
         setTimeout(() => {
           const cartPosition = cartSection.offsetTop - 80;
           window.scrollTo({ 
@@ -319,9 +326,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
       }, 700);
       
-      // Get package features and price
+      // Get package data
       const features = packageFeatures[packageName] || [];
       const packagePrice = packagePrices[packageName] || 0;
+      const receiptCharge = receiptCharges[receiptType] || 0;
+      const basePrice = packagePrice - receiptCharge; // Calculate base price for display
       
       // Display package details
       const packageDisplay = `
@@ -338,14 +347,22 @@ document.addEventListener('DOMContentLoaded', function() {
       
       document.getElementById('selectedPackageDisplay').innerHTML = packageDisplay;
       document.getElementById('packageBadge').textContent = `${packageName} Package`;
-      document.getElementById('summaryPackageDetails').textContent = `Receipt Payment: ${receiptType}`;
       
-      // Update package price in summary
+      // Show breakdown in summary details
+      document.getElementById('summaryPackageDetails').innerHTML = `
+        Receipt Payment: <strong>${receiptType}</strong>
+        <br>
+        <span style="font-size: 0.85rem; color: #a0a0a0; margin-top: 5px; display: block;">
+          Base: $${basePrice.toFixed(2)} + ${receiptType} ($${receiptCharge})
+        </span>
+      `;
+      
+      // Show final package price (unchanged)
       document.getElementById('summaryPackagePrice').textContent = `$${packagePrice.toFixed(2)}`;
       
-      // Initialize cart calculations with package price
+      // Initialize cart calculations
       setTimeout(() => {
-        initCartCalculations(packagePrice);
+        initCartCalculations(packagePrice, packageName, receiptType, basePrice, receiptCharge);
       }, 900);
     }
   }
@@ -372,11 +389,11 @@ function backToPackages() {
   }, 100);
 }
 
-// Global variables for order data
+// Global variable for order data
 let orderData = {};
 
-// Cart calculations with package price
-function initCartCalculations(packagePrice) {
+// Cart calculations
+function initCartCalculations(packagePrice, packageName, receiptType, basePrice, receiptCharge) {
   const domainRadios = document.querySelectorAll('input[name="domain"]');
   const hostingRadios = document.querySelectorAll('input[name="hosting"]');
   const checkoutBtn = document.getElementById('checkoutBtn');
@@ -446,11 +463,13 @@ function initCartCalculations(packagePrice) {
     
     checkoutBtn.disabled = !(selectedDomain && selectedHosting);
     
-    // Store order data
+    // Store order data for modal
     orderData = {
-      packageName: document.getElementById('packageBadge').textContent,
+      packageName: packageName,
       packagePrice: packagePrice.toFixed(2),
-      receiptPayment: document.getElementById('summaryPackageDetails').textContent.replace('Receipt Payment: ', ''),
+      basePrice: basePrice.toFixed(2),
+      receiptPayment: receiptType,
+      receiptCharge: receiptCharge.toFixed(2),
       domain: selectedDomainText,
       domainPrice: domainPrice.toFixed(2),
       hosting: selectedHostingText,
@@ -466,7 +485,6 @@ function initCartCalculations(packagePrice) {
   
   updateSummary();
   
-  // Checkout button - Open custom modal
   checkoutBtn.addEventListener('click', openCheckoutModal);
 }
 
@@ -476,7 +494,7 @@ function openCheckoutModal() {
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
   
-  // Populate order summary in modal
+  // Populate order summary with breakdown
   const summaryHtml = `
     <div class="order-summary-item">
       <span class="order-summary-label">Package:</span>
@@ -486,22 +504,40 @@ function openCheckoutModal() {
       <span class="order-summary-label">Receipt Payment:</span>
       <span class="order-summary-value">${orderData.receiptPayment}</span>
     </div>
-    <div class="order-summary-item">
-      <span class="order-summary-label">Package Price:</span>
-      <span class="order-summary-value">$${orderData.packagePrice}</span>
+    <div style="background: rgba(124, 233, 230, 0.05); padding: 12px; border-radius: 8px; margin: 10px 0;">
+      <div class="order-summary-item" style="border: none; padding: 5px 0;">
+        <span class="order-summary-label" style="font-size: 0.9rem;">Base Package:</span>
+        <span class="order-summary-value" style="font-size: 0.9rem;">$${orderData.basePrice}</span>
+      </div>
+      <div class="order-summary-item" style="border: none; padding: 5px 0;">
+        <span class="order-summary-label" style="font-size: 0.9rem; color: #8b5cf6;">${orderData.receiptPayment} Charge:</span>
+        <span class="order-summary-value" style="font-size: 0.9rem; color: #8b5cf6;">+$${orderData.receiptCharge}</span>
+      </div>
+      <div class="order-summary-item" style="border: none; padding: 8px 0 0 0;">
+        <span class="order-summary-label" style="font-weight: 700;">Package Total:</span>
+        <span class="order-summary-value" style="font-size: 1.1rem; font-weight: 700;">$${orderData.packagePrice}</span>
+      </div>
     </div>
     <div class="order-summary-item">
-      <span class="order-summary-label">Domain (${orderData.domain}):</span>
+      <span class="order-summary-label">Domain:</span>
       <span class="order-summary-value">$${orderData.domainPrice}</span>
     </div>
+    <div class="order-summary-item" style="font-size: 0.85rem; padding-left: 15px; color: #a0a0a0;">
+      <span>${orderData.domain}</span>
+      <span></span>
+    </div>
     <div class="order-summary-item">
-      <span class="order-summary-label">Hosting (${orderData.hosting}):</span>
+      <span class="order-summary-label">Hosting:</span>
       <span class="order-summary-value">$${orderData.hostingPrice}</span>
     </div>
+    <div class="order-summary-item" style="font-size: 0.85rem; padding-left: 15px; color: #a0a0a0;">
+      <span>${orderData.hosting}</span>
+      <span></span>
+    </div>
     ${orderData.savings > 0 ? `
-    <div class="order-summary-item" style="color: #8b5cf6;">
-      <span class="order-summary-label" style="color: #8b5cf6;">You Save:</span>
-      <span class="order-summary-value" style="color: #8b5cf6;">-$${orderData.savings}</span>
+    <div class="order-summary-item" style="background: rgba(139, 92, 246, 0.1); padding: 10px; border-radius: 8px; margin: 10px 0;">
+      <span class="order-summary-label" style="color: #8b5cf6; font-weight: 600;">You Save:</span>
+      <span class="order-summary-value" style="color: #8b5cf6; font-weight: 700;">-$${orderData.savings}</span>
     </div>
     ` : ''}
     <div class="order-summary-total">
@@ -513,14 +549,14 @@ function openCheckoutModal() {
   document.getElementById('modalOrderSummary').innerHTML = summaryHtml;
 }
 
-// Close checkout modal
+// Close modal
 function closeCheckoutModal() {
   const modal = document.getElementById('checkoutModal');
   modal.style.display = 'none';
   document.body.style.overflow = 'auto';
 }
 
-// Handle checkout form submission
+// Handle form submission
 document.addEventListener('DOMContentLoaded', function() {
   const checkoutForm = document.getElementById('checkoutForm');
   
@@ -532,12 +568,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const btnText = submitBtn.querySelector('.btn-text');
       const btnLoading = submitBtn.querySelector('.btn-loading');
       
-      // Show loading state
       btnText.style.display = 'none';
       btnLoading.style.display = 'flex';
       submitBtn.disabled = true;
       
-      // Get form data
       const formData = {
         fullName: document.getElementById('fullName').value,
         email: document.getElementById('email').value,
@@ -552,7 +586,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ...orderData
       };
       
-      // Send email via EmailJS
       sendOrderEmail(formData, submitBtn, btnText, btnLoading);
     });
   }
@@ -560,16 +593,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Send order email
 function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
-  // EmailJS template parameters
   const templateParams = {
     to_email: 'npvsgroup@gmail.com',
-    name: data.fullName,
-    email: data.email,
-    phone: data.phone,
-    address: `${data.address1}${data.address2 ? ', ' + data.address2 : ''}, ${data.city}, ${data.state}, ${data.country} ${data.postalCode}`,
+    customer_name: data.fullName,
+    customer_email: data.email,
+    customer_phone: data.phone,
+    customer_address: `${data.address1}${data.address2 ? ', ' + data.address2 : ''}, ${data.city}, ${data.state}, ${data.country} ${data.postalCode}`,
     package_name: data.packageName,
-    package_price: data.packagePrice,
+    base_price: data.basePrice,
     receipt_payment: data.receiptPayment,
+    receipt_charge: data.receiptCharge,
+    package_price: data.packagePrice,
     domain_plan: data.domain,
     domain_price: data.domainPrice,
     hosting_plan: data.hosting,
@@ -581,35 +615,24 @@ function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
     order_date: new Date().toLocaleString()
   };
   
-  // Send via EmailJS
-  emailjs.send('service_najgbhk', 'template_fop2dpi', templateParams)
+  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
     .then(function(response) {
       console.log('✅ Email sent!', response.status);
-      
-      // Show success message
       alert('🎉 Order confirmed successfully!\n\nWe have received your order and will contact you shortly at:\n' + data.email);
-      
-      // Close modal and reset
       closeCheckoutModal();
       document.getElementById('checkoutForm').reset();
-      
-      // Reset button
       btnText.style.display = 'block';
       btnLoading.style.display = 'none';
       submitBtn.disabled = false;
-      
     }, function(error) {
       console.log('❌ Email failed:', error);
-      
-      // Show error message
       alert('❌ Something went wrong. Please try again or contact us directly at npvsgroup@gmail.com');
-      
-      // Reset button
       btnText.style.display = 'block';
       btnLoading.style.display = 'none';
       submitBtn.disabled = false;
     });
 }
+
 
 
 // ============================================
@@ -728,3 +751,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
