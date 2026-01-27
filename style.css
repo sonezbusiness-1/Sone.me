@@ -872,6 +872,184 @@ main h2 {
   margin-top: 0.5rem;
 }
 
+/* Payment Gateway Section */
+.gateway-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.gateway-card {
+  min-height: 420px;
+}
+
+.gateway-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.free-badge {
+  background: rgba(46, 213, 115, 0.2);
+  color: #2ed573;
+  border: 1px solid #2ed573;
+}
+
+.standard-badge {
+  background: rgba(255, 184, 0, 0.2);
+  color: #ffb800;
+  border: 1px solid #ffb800;
+}
+
+.premium-badge {
+  background: rgba(99, 110, 250, 0.2);
+  color: #636efa;
+  border: 1px solid #636efa;
+}
+
+.gateway-features {
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-highlight {
+  color: #7ce9e6;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.gateway-features > p {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  margin: 0.3rem 0;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.feature-yes {
+  color: #2ed573;
+  font-size: 0.85rem;
+}
+
+.feature-no {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.plan-note {
+  color: #8b5cf6;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 0.8rem;
+  text-align: center;
+}
+
+/* Desktop/Laptop Responsive Fixes */
+@media (min-width: 1024px) {
+  .cart-container {
+    max-width: 1400px;
+  }
+  
+  .cart-content {
+    grid-template-columns: 2fr 1fr;
+    gap: 2.5rem;
+  }
+  
+  .selected-package {
+    grid-column: 1 / -1;
+  }
+  
+  .cart-item:not(.selected-package) {
+    grid-column: 1;
+  }
+  
+  .cart-summary {
+    grid-column: 2;
+    grid-row: 2 / span 10;
+  }
+  
+  .option-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .gateway-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .package-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .cart-container {
+    max-width: 1600px;
+  }
+  
+  .modal-container {
+    max-width: 900px;
+  }
+}
+
+/* Better scrollbar for desktop */
+.cart-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cart-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.cart-container::-webkit-scrollbar-thumb {
+  background: rgba(124, 233, 230, 0.3);
+  border-radius: 10px;
+}
+
+.cart-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 233, 230, 0.5);
+}
+
+/* POS Printer Dropdown */
+.printer-select {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(124, 233, 230, 0.3);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 500;
+}
+
+.printer-select:focus {
+  outline: none;
+  border-color: #7ce9e6;
+  background: rgba(124, 233, 230, 0.05);
+  box-shadow: 0 0 0 3px rgba(124, 233, 230, 0.1);
+}
+
+.printer-select option {
+  background: #1a2f3a;
+  color: #fff;
+  padding: 0.8rem;
+}
+
+.printer-select:hover {
+  border-color: #7ce9e6;
+}
+
 /* Cart Summary */
 .cart-summary {
   background: linear-gradient(145deg, rgba(36, 51, 59, 0.9), rgba(11, 11, 46, 0.9));
