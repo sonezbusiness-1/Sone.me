@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+
+
 // ============================================
 // QR SYSTEM PACKAGES
 // ============================================
@@ -170,6 +172,62 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('🎉 QR System initialized successfully!');
   }
 })();
+
+// Download Guide Function
+function downloadGuide(language) {
+  console.log(`📥 Downloading ${language} guide...`);
+  
+  // Show loading state
+  const btn = event.target.closest('.download-btn');
+  const originalHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+      <circle cx="12" cy="12" r="10"/>
+    </svg>
+    <div class="btn-content">
+      <span class="btn-title">Downloading...</span>
+    </div>
+  `;
+  
+  // Simulate download (replace with actual file URLs)
+  setTimeout(() => {
+    if (language === 'sinhala') {
+      // Create download link for Sinhala PDF
+      const link = document.createElement('a');
+      link.href = '/downloads/QR-System-Guide-Sinhala.pdf'; // Your actual PDF path
+      link.download = 'QR-System-Guide-Sinhala.pdf';
+      link.click();
+      
+      // Show success message
+      alert('✅ සිංහල විස්තරය download වෙමින් පවතී!\n\nThank you for your interest!');
+    } else {
+      // Create download link for English PDF
+      const link = document.createElement('a');
+      link.href = '/downloads/QR-System-Guide-English.pdf'; // Your actual PDF path
+      link.download = 'QR-System-Guide-English.pdf';
+      link.click();
+      
+      // Show success message
+      alert('✅ English guide is downloading!\n\nThank you for your interest!');
+    }
+    
+    // Reset button
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+  }, 1000);
+}
+
+// Add spin animation for loading
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(style);
+
 
 
 // ============================================
