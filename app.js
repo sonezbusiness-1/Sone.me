@@ -165,7 +165,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Confirm button handler
     confirmBtn.addEventListener('click', function() {
       if (selectedPackage && receiptChoices[selectedPackage]) {
-        alert('Selected Package: ' + selectedPackage + '\nReceipt Payment: ' + receiptChoices[selectedPackage]);
+         Swal.fire({
+            title: '✓ Package Selected',
+            html: `
+              <div style="text-align: left; padding: 1rem;">
+                <p style="margin: 0.5rem 0;"><strong>Selected Package:</strong> ${selectedPackage}</p>
+                <p style="margin: 0.5rem 0;"><strong>Receipt Payment:</strong> ${receiptChoices[selectedPackage]}</p>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#7ce9e6',
+            background: '#1a2f3a',
+            color: '#fff'
+          });
       }
     });
     
@@ -843,21 +856,56 @@ function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
   };
   
   emailjs.send('service_najgbhk', 'template_fop2dpi', templateParams)
-    .then(function(response) {
-      console.log('✅ Email sent!', response.status);
-      alert('🎉 Order confirmed successfully!\n\nWe have received your order and will contact you shortly at:\n' + data.email);
+  .then(function(response) {
+    console.log('✅ Email sent!', response.status);
+    
+    // Custom success modal instead of alert
+    Swal.fire({
+      icon: 'success',
+      title: '🎉 Order Confirmed!',
+      html: `
+        <div style="text-align: left; padding: 1rem;">
+          <p style="margin: 1rem 0; font-size: 1.1rem;">We have received your order and will contact you shortly at:</p>
+          <p style="margin: 1rem 0; color: #7ce9e6; font-weight: 600; font-size: 1.2rem;">${data.email}</p>
+        </div>
+      `,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#7ce9e6',
+      background: '#1a2f3a',
+      color: '#fff',
+      allowOutsideClick: false
+    }).then(() => {
       closeCheckoutModal();
       document.getElementById('checkoutForm').reset();
-      btnText.style.display = 'block';
-      btnLoading.style.display = 'none';
-      submitBtn.disabled = false;
-    }, function(error) {
-      console.log('❌ Email failed:', error);
-      alert('❌ Something went wrong. Please try again or contact us directly at npvsgroup@gmail.com');
-      btnText.style.display = 'block';
-      btnLoading.style.display = 'none';
-      submitBtn.disabled = false;
     });
+    
+    btnText.style.display = 'block';
+    btnLoading.style.display = 'none';
+    submitBtn.disabled = false;
+    
+  }, function(error) {
+    console.log('❌ Email failed:', error);
+    
+    // Custom error modal instead of alert
+    Swal.fire({
+      icon: 'error',
+      title: '❌ Oops!',
+      html: `
+        <div style="text-align: left; padding: 1rem;">
+          <p style="margin: 1rem 0;">Something went wrong. Please try again or contact us directly at:</p>
+          <p style="margin: 1rem 0; color: #7ce9e6; font-weight: 600;">npvsgroup@gmail.com</p>
+        </div>
+      `,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#7ce9e6',
+      background: '#1a2f3a',
+      color: '#fff'
+    });
+    
+    btnText.style.display = 'block';
+    btnLoading.style.display = 'none';
+    submitBtn.disabled = false;
+  });
 }
 
 
