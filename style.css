@@ -248,7 +248,7 @@ main h2 {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.about-title {
+.about-title { 
     margin-bottom: 5%;
     font-size: 5rem;
     background-image: linear-gradient(rgb(133, 133, 133), rgb(255, 255, 255));
@@ -561,6 +561,201 @@ main h2 {
   background-clip: text;
 }
 
+/* ============================================
+   VIDEO PLAYER STYLES
+   ============================================ */
+
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 2rem 0;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+}
+
+.fullscreen-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.fullscreen-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.1);
+}
+
+.fullscreen-btn svg {
+    color: #fff;
+}
+
+/* Fullscreen Mode Styles */
+.video-container:fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.video-container:-webkit-full-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.video-container:-moz-full-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.video-container:-ms-fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.video-container:fullscreen video {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+}
+
+.video-container:-webkit-full-screen video {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+}
+
+/* Responsive Styles for Video */
+
+/* Desktop (1920px and up) */
+@media (min-width: 1920px) {
+    .video-container {
+        max-width: 1600px;
+        margin: 3rem auto;
+    }
+}
+
+/* Large Desktop/Laptop (1440px - 1919px) */
+@media (min-width: 1440px) and (max-width: 1919px) {
+    .video-container {
+        max-width: 1200px;
+        margin: 2.5rem auto;
+    }
+}
+
+/* Standard Laptop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .video-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+    
+    .fullscreen-btn {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .video-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        border-radius: 12px;
+    }
+    
+    .fullscreen-btn {
+        width: 40px;
+        height: 40px;
+        bottom: 12px;
+        right: 12px;
+    }
+    
+    .fullscreen-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Mobile (below 768px) */
+@media (max-width: 767px) {
+    .video-container {
+        margin: 1.5rem 0;
+        border-radius: 10px;
+    }
+    
+    .fullscreen-btn {
+        width: 36px;
+        height: 36px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .fullscreen-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Small Mobile (below 480px) */
+@media (max-width: 480px) {
+    .video-container {
+        margin: 1rem 0;
+        border-radius: 8px;
+    }
+    
+    .fullscreen-btn {
+        width: 32px;
+        height: 32px;
+        bottom: 8px;
+        right: 8px;
+    }
+    
+    .fullscreen-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Ensure video controls are visible in fullscreen */
+.video-container:fullscreen .fullscreen-btn,
+.video-container:-webkit-full-screen .fullscreen-btn,
+.video-container:-moz-full-screen .fullscreen-btn {
+    display: flex;
+}
+
 .highlight-content {
   display: flex;
   flex-direction: column;
@@ -640,7 +835,7 @@ main h2 {
 }
 
 .stat-number {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #7ce9e6;
   text-shadow: 0 0 20px rgba(124, 233, 230, 0.5);
