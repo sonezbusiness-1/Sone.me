@@ -7,7 +7,7 @@ const PRODUCTS = [
     category: "phones",
     brand: "Apple",
     price: 1199,
-    image: "https://images.unsplash.com/photo-1592286927505-1def25115558?w=500&h=500&fit=crop",
+    image: "/projects/1ecommerce/images/iphone16.jpg",
     specs: {
       ram: "12GB",
       storage: "512GB",
@@ -24,7 +24,7 @@ const PRODUCTS = [
     category: "phones",
     brand: "Samsung",
     price: 1299,
-    image: "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=cropfit=crop",
+    image: "/projects/1ecommerce/images/samsung25ultra.jpg",
     specs: {
       ram: "16GB",
       storage: "1TB",
@@ -58,7 +58,7 @@ const PRODUCTS = [
     category: "phones",
     brand: "OnePlus",
     price: 799,
-    image: "https://images.unsplash.com/photo-1606933248051-5ce98adc6ecf?w=500https://images.unsplash.com/photo-1606933248051-5ce98adc6ecf?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1606933248051-5ce98adc6ecf?w=500&h=500&fit=cropfit=crop",
+    image: "/projects/1ecommerce/images/OnePlus 13.jpg",
     specs: {
       ram: "12GB",
       storage: "256GB",
@@ -111,7 +111,7 @@ const PRODUCTS = [
     category: "laptops",
     brand: "Dell",
     price: 2199,
-    image: "https://images.unsplash.com/photo-1588872657840-790ff3bde08c?w=500https://images.unsplash.com/photo-1588872657840-790ff3bde08c?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1588872657840-790ff3bde08c?w=500&h=500&fit=cropfit=crop",
+    image: "/projects/1ecommerce/images/dell.jpg",
     specs: {
       processor: "Intel Core i9-14900HX",
       ram: "32GB",
@@ -128,7 +128,7 @@ const PRODUCTS = [
     category: "laptops",
     brand: "Lenovo",
     price: 1699,
-    image: "https://images.unsplash.com/photo-1559056199-641a0ac8b3f7?w=500https://images.unsplash.com/photo-1559056199-641a0ac8b3f7?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1559056199-641a0ac8b3f7?w=500&h=500&fit=cropfit=crop",
+    image: "/projects/1ecommerce/images/Lenovo.jpg",
     specs: {
       processor: "Intel Core i7-14700K",
       ram: "16GB",
@@ -145,7 +145,7 @@ const PRODUCTS = [
     category: "laptops",
     brand: "ASUS",
     price: 2899,
-    image: "https://images.unsplash.com/photo-1588872657840-790ff3bde08c?w=500https://images.unsplash.com/photo-1603302576837-37894b6baf30?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1603302576837-37894b6baf30?w=500&h=500&fit=cropfit=crop",
+    image: "/projects/1ecommerce/images/ASUS.jpg",
     specs: {
       processor: "Intel Core i9-14900HX",
       ram: "32GB",
@@ -181,7 +181,7 @@ const PRODUCTS = [
     category: "tablets",
     brand: "Samsung",
     price: 999,
-    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&h=500&fit=crop",
+    image: "/projects/1ecommerce/images/SamsungGalaxyTabS10.jpg",
     specs: {
       processor: "Snapdragon 8 Gen 3 Leading Version",
       ram: "12GB",
@@ -198,7 +198,7 @@ const PRODUCTS = [
     category: "tablets",
     brand: "Microsoft",
     price: 1299,
-    image: "https://images.unsplash.com/photo-1585864299869-592a1ee14c2d?w=500https://images.unsplash.com/photo-1585864299869-592a1ee14c2d?w=500&h=500&fit=croph=500https://images.unsplash.com/photo-1585864299869-592a1ee14c2d?w=500&h=500&fit=cropfit=crop",
+    image: "/projects/1ecommerce/images/Microsoft.jpg",
     specs: {
       processor: "Snapdragon X Plus",
       ram: "16GB",
@@ -217,7 +217,7 @@ const PRODUCTS = [
     category: "wearables",
     brand: "Apple",
     price: 429,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop",
+    image: "/projects/1ecommerce/images/Apple Watch Series 10.jpg",
     specs: {
       display: "1.69\" Retina LTPO OLED",
       processor: "S10 SiP",
@@ -234,7 +234,7 @@ const PRODUCTS = [
     category: "wearables",
     brand: "Samsung",
     price: 399,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop",
+    image: "/projects/1ecommerce/images/SamsungGalaxyWatch.jpg",
     specs: {
       display: "1.5\" AMOLED",
       processor: "Exynos W1000",
