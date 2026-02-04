@@ -909,6 +909,103 @@ function sendOrderEmail(data, submitBtn, btnText, btnLoading) {
 }
 
 
+// ============================================
+// VIDEO PLAYER FULLSCREEN FUNCTIONALITY
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('demoVideo');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const fullscreenIcon = document.querySelector('.fullscreen-icon');
+    const exitFullscreenIcon = document.querySelector('.exit-fullscreen-icon');
+
+    if (!videoContainer || !video || !fullscreenBtn) {
+        return; // Exit if elements don't exist
+    }
+
+    // Toggle fullscreen function
+    function toggleFullscreen() {
+        if (!document.fullscreenElement && 
+            !document.webkitFullscreenElement && 
+            !document.mozFullScreenElement && 
+            !document.msFullscreenElement) {
+            
+            // Enter fullscreen
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.webkitRequestFullscreen) {
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.mozRequestFullScreen) {
+                videoContainer.mozRequestFullScreen();
+            } else if (videoContainer.msRequestFullscreen) {
+                videoContainer.msRequestFullscreen();
+            }
+        } else {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    // Update button icon based on fullscreen state
+    function updateFullscreenButton() {
+        if (document.fullscreenElement || 
+            document.webkitFullscreenElement || 
+            document.mozFullScreenElement || 
+            document.msFullscreenElement) {
+            
+            // In fullscreen - show exit icon
+            fullscreenIcon.style.display = 'none';
+            exitFullscreenIcon.style.display = 'block';
+            fullscreenBtn.title = 'Exit Fullscreen';
+        } else {
+            // Not in fullscreen - show enter icon
+            fullscreenIcon.style.display = 'block';
+            exitFullscreenIcon.style.display = 'none';
+            fullscreenBtn.title = 'Fullscreen';
+        }
+    }
+
+    // Event listeners
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // Listen for fullscreen changes
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+    document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+    document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+
+    // Double click on video to toggle fullscreen
+    video.addEventListener('dblclick', toggleFullscreen);
+
+    // Keyboard shortcut (F key) for fullscreen
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'f' || e.key === 'F') {
+            const activeElement = document.activeElement;
+            // Only toggle if not typing in an input field
+            if (activeElement.tagName !== 'INPUT' && 
+                activeElement.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        }
+        
+        // ESC key to exit fullscreen (browser default, but we handle it too)
+        if (e.key === 'Escape' && document.fullscreenElement) {
+            toggleFullscreen();
+        }
+    });
+});
+
+
 
 // ============================================
 // CONTACT FUNCTIONS
